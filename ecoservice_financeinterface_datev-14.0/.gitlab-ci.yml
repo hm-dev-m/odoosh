@@ -1,0 +1,11 @@
+variables:
+  ECO_GROUPS: "
+  financeinterface/ecoservice_financeinterface
+  "
+  OCA_REPOS: ""
+  ODOO_MAJOR: "14"
+  ODOO_MINOR: "0"
+
+include:
+  - project: 'cicd/default'
+    file: '/init.gitlab-ci.yml'
