@@ -92,6 +92,9 @@ class Ecofi(models.Model):
                 ).replace('.', ',')
         if line.partner_id:
             datevdict['ZusatzInhalt1'] = line.partner_id.name
+
+        datevdict['Url'] = self.env['ir.config_parameter'].get_param('web.base.url') + '#id='+ move.id + '&model=account.move'
+
         return errorcount, partnererror, thislog, thismovename, datevdict
 
     def format_umsatz(self, lineumsatz):
