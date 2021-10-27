@@ -93,7 +93,7 @@ class Ecofi(models.Model):
         if line.partner_id:
             datevdict['ZusatzInhalt1'] = line.partner_id.name
 
-        datevdict['Url'] = print(self.env['ir.config_parameter'].get_param('web.base.url') , '#id=', move.id , '&model=account.move')
+        datevdict['Url'] = self.env['ir.config_parameter'].get_param('web.base.url') , '#id=', str(move.id) , '&model=account.move'
 
         return errorcount, partnererror, thislog, thismovename, datevdict
 
