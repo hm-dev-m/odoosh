@@ -383,6 +383,7 @@ class Ecofi(models.Model):
             'Datum': kwargs.get('Datum', ''),
             'Konto': kwargs.get('Konto', ''),
             'Beleg1': kwargs.get('Beleg1', ''),
+            'Url': kwargs.get('Url', ''),
             'Beleg2': kwargs.get('Beleg2', ''),
             'Waehrung': kwargs.get('Waehrung', ''),
             'Buschluessel': kwargs.get('Buschluessel', ''),
