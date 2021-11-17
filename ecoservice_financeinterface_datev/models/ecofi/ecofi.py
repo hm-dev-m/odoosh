@@ -92,9 +92,6 @@ class Ecofi(models.Model):
                 ).replace('.', ',')
         if line.partner_id:
             datevdict['ZusatzInhalt1'] = line.partner_id.name
-
-        datevdict['Url'] = self.env['ir.config_parameter'].get_param('web.base.url') + '#id='+ str(move.id) + '&model=account.move'
-
         return errorcount, partnererror, thislog, thismovename, datevdict
 
     def format_umsatz(self, lineumsatz):
@@ -383,7 +380,6 @@ class Ecofi(models.Model):
             'Datum': kwargs.get('Datum', ''),
             'Konto': kwargs.get('Konto', ''),
             'Beleg1': kwargs.get('Beleg1', ''),
-            'Url': kwargs.get('Url', ''),
             'Beleg2': kwargs.get('Beleg2', ''),
             'Waehrung': kwargs.get('Waehrung', ''),
             'Buschluessel': kwargs.get('Buschluessel', ''),
