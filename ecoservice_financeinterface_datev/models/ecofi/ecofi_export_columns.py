@@ -346,7 +346,7 @@ class EcofiExportColumns(models.AbstractModel):
             '',  # Postensperre bis
             '',  # Bezeichnung SoBil-Sachverhalt
             '',  # Kennzeichen SoBil-Buchung
-            datev_dict['Festschreibung'] or '',  # Festschreibung
-            '',  # Leistungsdatum
+            '',  # Festschreibung
+            '0',  # Leistungsdatum
             ''   # Datum Zuord.Steuerperiode
         ]
