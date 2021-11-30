@@ -227,7 +227,8 @@ class EcofiExportColumns(models.AbstractModel):
             'Kennzeichen SoBil-Buchung',
             'Festschreibung',
             'Leistungsdatum',
-            'Datum Zuord.Steuerperiode'
+            'Datum Zuord.Steuerperiode',
+            'Debitoren-/Kreditorenkonto'
         ]
 
     @api.model
@@ -346,7 +347,9 @@ class EcofiExportColumns(models.AbstractModel):
             '',  # Postensperre bis
             '',  # Bezeichnung SoBil-Sachverhalt
             '',  # Kennzeichen SoBil-Buchung
-            datev_dict['Festschreibung'] or '',  # Festschreibung
-            '',  # Leistungsdatum
-            ''   # Datum Zuord.Steuerperiode
+            '',  # Festschreibung
+            '0',  # Leistungsdatum
+            '',   # Datum Zuord.Steuerperiode,
+            datev_dict['DebitorenKreditorenkonto'] or '',  #Debitoren-/Kreditorenkonto
+
         ]
