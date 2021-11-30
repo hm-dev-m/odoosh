@@ -92,6 +92,10 @@ class Ecofi(models.Model):
                 ).replace('.', ',')
         if line.partner_id:
             datevdict['ZusatzInhalt1'] = line.partner_id.name
+            if move.move_type == 'in_invoice'
+                datevdict['DebitorenKreditorenkonto'] = (int) line.partner_id + 70000
+            else
+                datevdict['DebitorenKreditorenkonto'] = (int) line.partner_id + 10000
         return errorcount, partnererror, thislog, thismovename, datevdict
 
     def format_umsatz(self, lineumsatz):
@@ -396,6 +400,7 @@ class Ecofi(models.Model):
             'Movename': kwargs.get('Movename', ''),
             'Auftragsnummer': kwargs.get('Auftragsnummer', ''),
             'ZusatzInhalt1': kwargs.get('ZusatzInhalt1', ''),
+            'DebitorenKreditorenkonto': kwargs.get('DebitorenKreditorenkonto', ''),
             'Festschreibung': kwargs.get('Festschreibung', ''),
         }
 
