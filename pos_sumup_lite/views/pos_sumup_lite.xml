@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    
+    <template id="assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_sumup_lite/static/src/js/pos_sumup_lite.js"></script>
+        </xpath>
+        <xpath expr="//link[@id='pos-stylesheet']" position="after">
+            <link rel="stylesheet" href="/pos_sumup_lite/static/src/css/pos_sumup_lite.css" />
+        </xpath>
+    </template>
+    
+</data>
+</odoo>
