@@ -1,0 +1,231 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* pos_sumup_lite
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-20 11:49+0000\n"
+"PO-Revision-Date: 2017-08-20 11:49+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: pos_sumup_lite
+#: model:ir.model,name:pos_sumup_lite.model_account_move
+msgid "Account Entry"
+msgstr "Account Entry"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_payment_method_sumup_add_payment_fees
+msgid "Add payment fees"
+msgstr "Add payment fees"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_config_sumup_affiliate_key
+msgid "Affiliate Key"
+msgstr "Affiliate Key"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_config_sumup_check_transaction_interval
+msgid "Check Transaction Interval (milliseconds)"
+msgstr "Check Transaction Interval (milliseconds)"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_create_uid
+msgid "Created by"
+msgstr "Created by"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_create_date
+msgid "Created on"
+msgstr "Created on"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_display_name
+msgid "Display Name"
+msgstr "Display Name"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/js/pos_sumup_lite.js:184
+#: code:addons/pos_sumup_lite/static/src/js/pos_sumup_lite.js:193
+#, python-format
+msgid "ERROR:"
+msgstr "ERROR:"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_sumup_lite
+#: model:ir.model,name:pos_sumup_lite.model_pos_payment_method
+msgid "Payment Method"
+msgstr "Payment Method"
+
+#. module: pos_sumup_lite
+#: model:ir.model,name:pos_sumup_lite.model_account_move_line
+msgid "Journal Item"
+msgstr "Journal Item"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction___last_update
+msgid "Last Modified on"
+msgstr "Last Modified on"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_write_uid
+msgid "Last Updated by"
+msgstr "Last Updated by"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_write_date
+msgid "Last Updated on"
+msgstr "Last Updated on"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_message
+msgid "Message"
+msgstr "Message"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/xml/pos_sumup_lite.xml:12
+#, python-format
+msgid "Payment Fees included:"
+msgstr "Payment Fees included:"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/xml/pos_sumup_lite.xml:69
+#, python-format
+msgid "Payment Transaction Code:"
+msgstr "Payment Transaction Code:"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_order_payment_fees
+msgid "Payment fees"
+msgstr "Payment fees"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_payment_method_sumup_payment_fees_percentage
+msgid "Payment fees percentage"
+msgstr "Payment fees percentage"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/xml/pos_sumup_lite.xml:60
+#, python-format
+msgid "Payment fees:"
+msgstr "Payment fees:"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/xml/pos_sumup_lite.xml:37
+#, python-format
+msgid "Please wait until the SumUp transaction will finish!"
+msgstr "Please wait until the SumUp transaction will finish!"
+
+#. module: pos_sumup_lite
+#: model:ir.model,name:pos_sumup_lite.model_pos_order
+msgid "Point of Sale"
+msgstr "Point of Sale"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/xml/pos_sumup_lite.xml:29
+#, python-format
+msgid "Send receipt to email:"
+msgstr "Send receipt to email:"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/xml/pos_sumup_lite.xml:20
+#, python-format
+msgid "Send receipt to mobile:"
+msgstr "Send receipt to mobile:"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_smp_tx_code
+msgid "Smp-tx-code"
+msgstr "Smp-tx-code"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/xml/pos_sumup_lite.xml:48
+#, python-format
+msgid "Start SumUp Transaction"
+msgstr "Start SumUp Transaction"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_successful
+msgid "Successful"
+msgstr "Successful"
+
+#. module: pos_sumup_lite
+#: model:ir.ui.view,arch_db:pos_sumup_lite.pos_config_view_form
+msgid "SumUp"
+msgstr "SumUp"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/js/pos_sumup_lite.js:295
+#, python-format
+msgid "SumUp transaction FAIL:"
+msgstr "SumUp transaction FAIL:"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/js/pos_sumup_lite.js:194
+#, python-format
+msgid "This feature is only available on iOS/Android devices!"
+msgstr "This feature is only available on iOS/Android devices!"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_account_move_transaction_code
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_order_transaction_code
+msgid "Transaction Code"
+msgstr "Transaction Code"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_sumup_transaction_uuid
+msgid "UUID"
+msgstr "UUID"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_payment_method_use_sumup_mob_app_and_card_reader
+msgid "Use SumUp mobile application with SumUp card reader"
+msgstr "Use SumUp mobile application with SumUp card reader"
+
+#. module: pos_sumup_lite
+#. odoo-web
+#: code:addons/pos_sumup_lite/static/src/js/pos_sumup_lite.js:185
+#, python-format
+msgid "Zero total sum!"
+msgstr "Zero total sum!"
+
+#. module: pos_sumup_lite
+#: model:ir.model,name:pos_sumup_lite.model_pos_config
+msgid "pos.config"
+msgstr "pos.config"
+
+#. module: pos_sumup_lite
+#: model:ir.model,name:pos_sumup_lite.model_pos_session
+msgid "pos.session"
+msgstr "pos.session"
+
+#. module: pos_sumup_lite
+#: model:ir.model,name:pos_sumup_lite.model_pos_sumup_transaction
+msgid "pos.sumup.transaction"
+msgstr "pos.sumup.transaction"
+
+#. module: pos_sumup_lite
+#: model:ir.model.fields,field_description:pos_sumup_lite.field_pos_order_ui_amount_total
+msgid "uiTotal"
+msgstr "uiTotal"
+
