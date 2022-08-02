@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_invoice_line_table_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@class='page']/table[@name='invoice_line_table']/tbody[@class='invoice_tbody']/t[3]/tr/t[@name='account_invoice_line_accountable']/td[3]/span[@t-field='line.price_unit']"
+               position="attributes">
+            <attribute name="t-options">{"precision": 2}</attribute>
+        </xpath>
+
+        <xpath expr="//div[@class='page']/table[@name='invoice_line_table']/tbody[@class='invoice_tbody']/t[3]/tr/t[@name='account_invoice_line_accountable']/td[@t-if='display_discount']/span[@t-field='line.discount']"
+               position="attributes">
+            <attribute name="t-options">{"precision": 2}</attribute>
+        </xpath>
+
+        <xpath expr="//div[@class='page']/table[@name='invoice_line_table']/tbody[@class='invoice_tbody']/t[3]/tr/t[@name='account_invoice_line_accountable']/td[@class='text-right o_price_total']"
+               position="replace">
+            <td class="text-right o_price_total text-nowrap">
+                <span class="text-nowrap" t-esc="o.format_monetary_field(line.price_subtotal)" groups="account.group_show_line_subtotals_tax_excluded" />
+                <span class="text-nowrap" t-esc="o.format_monetary_field(line.price_total)" groups="account.group_show_line_subtotals_tax_included" />
+            </td>
+        </xpath>
+
+        <xpath expr="//div[@class='page']/div[@class='clearfix']/div[@id='total']/div/table" position="replace">
+            <table class="table table-sm" style="page-break-inside: avoid;">
+                <tr class="border-black o_subtotal" style="">
+                    <td>
+                        <strong>Subtotal</strong>
+                    </td>
+                    <td class="text-right">
+                        <span class="text-nowrap" t-esc="o.format_monetary_field(o.amount_untaxed)"/>
+                    </td>
+                </tr>
+                <t t-foreach="o.amount_by_group" t-as="amount_by_group">
+                    <tr style="">
+                        <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">
+                            <td>
+                                <span class="text-nowrap" t-esc="amount_by_group[0]"/>
+                            </td>
+                            <td class="text-right o_price_total text-nowrap">
+                                <span class="text-nowrap" t-esc="o.format_monetary_field(amount_by_group[1])"/>
+                            </td>
+                        </t>
+                        <t t-else="">
+                            <td>
+                                <span t-esc="amount_by_group[0]"/>
+                                <span class="text-nowrap">on
+                                    <t t-esc="o.format_monetary_field(amount_by_group[2])"/>
+                                </span>
+                            </td>
+                            <td class="text-right o_price_total">
+                                <span class="text-nowrap" t-esc="o.format_monetary_field(amount_by_group[1])"/>
+                            </td>
+                        </t>
+                    </tr>
+                </t>
+                <tr class="border-black o_total">
+                    <td>
+                        <strong>Total</strong>
+                    </td>
+                    <td class="text-right">
+                        <span class="text-nowrap" t-esc="o.format_monetary_field(o.amount_total)"/>
+                    </td>
+                </tr>
+                <t t-if="print_with_payments">
+                    <t t-if="o.payment_state != 'invoicing_legacy'">
+                        <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                        <t t-foreach="payments_vals" t-as="payment_vals">
+                            <tr>
+                                <td>
+                                    <i class="oe_form_field text-right oe_payment_label">Paid on
+                                        <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/>
+                                    </i>
+                                </td>
+                                <td class="text-right">
+                                    <span class="text-nowrap" t-esc="o.format_monetary_field(payment_vals['amount'])"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-if="len(payments_vals) > 0">
+                            <tr class="border-black">
+                                <td>
+                                    <strong>Amount Due</strong>
+                                </td>
+                                <td class="text-right">
+                                    <span class="text-nowrap" t-esc="o.format_monetary_field(o.amount_residual)"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </t>
+            </table>
+        </xpath>
+    </template>
+</odoo>
