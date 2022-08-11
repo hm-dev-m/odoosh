@@ -1,13 +1,27 @@
 # © 2017 Creu Blanca
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo.exceptions import ValidationError
+from unittest.mock import patch
+
 from odoo.tests.common import TransactionCase
+
+from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 
 
 class TestPaymentMode(TransactionCase):
     def setUp(self):
         super(TestPaymentMode, self).setUp()
+
+        Method_get_payment_method_information = (
+            AccountPaymentMethod._get_payment_method_information
+        )
+
+        def _get_payment_method_information(self):
+            res = Method_get_payment_method_information(self)
+            res["IN"] = {"mode": "multi", "domain": [("type", "=", "bank")]}
+            res["IN2"] = {"mode": "multi", "domain": [("type", "=", "bank")]}
+            res["electronic_out"] = {"mode": "multi", "domain": [("type", "=", "bank")]}
+            return res
 
         # Company
         self.company = self.env.ref("base.main_company")
@@ -29,13 +43,19 @@ class TestPaymentMode(TransactionCase):
 
         self.manual_in = self.env.ref("account.account_payment_method_manual_in")
 
-        self.electronic_out = self.env["account.payment.method"].create(
-            {
-                "name": "Electronic Out",
-                "code": "electronic_out",
-                "payment_type": "outbound",
-            }
-        )
+        with patch.object(
+            AccountPaymentMethod,
+            "_get_payment_method_information",
+            _get_payment_method_information,
+        ):
+
+            self.electronic_out = self.env["account.payment.method"].create(
+                {
+                    "name": "Electronic Out",
+                    "code": "electronic_out",
+                    "payment_type": "outbound",
+                }
+            )
 
         self.payment_mode_c1 = self.env["account.payment.mode"].create(
             {
@@ -48,37 +68,6 @@ class TestPaymentMode(TransactionCase):
             }
         )
 
-    def test_constrains(self):
-        with self.assertRaises(ValidationError):
-            self.payment_mode_c1.write(
-                {"generate_move": True, "offsetting_account": False}
-            )
-        with self.assertRaises(ValidationError):
-            self.payment_mode_c1.write(
-                {
-                    "generate_move": True,
-                    "offsetting_account": "bank_account",
-                    "move_option": False,
-                }
-            )
-        with self.assertRaises(ValidationError):
-            self.payment_mode_c1.write(
-                {
-                    "generate_move": True,
-                    "offsetting_account": "transfer_account",
-                    "transfer_account_id": False,
-                }
-            )
-        with self.assertRaises(ValidationError):
-            self.payment_mode_c1.write(
-                {
-                    "generate_move": True,
-                    "offsetting_account": "transfer_account",
-                    "transfer_account_id": self.account.id,
-                    "transfer_journal_id": False,
-                }
-            )
-
     def test_onchange_generate_move(self):
         self.payment_mode_c1.generate_move = True
         self.payment_mode_c1.generate_move_change()
@@ -86,11 +75,6 @@ class TestPaymentMode(TransactionCase):
         self.payment_mode_c1.generate_move = False
         self.payment_mode_c1.generate_move_change()
         self.assertFalse(self.payment_mode_c1.move_option)
-
-    def test_onchange_offsetting_account(self):
-        self.payment_mode_c1.offsetting_account = "bank_account"
-        self.payment_mode_c1.offsetting_account_change()
-        self.assertFalse(self.payment_mode_c1.transfer_account_id)
 
     def test_onchange_payment_type(self):
         self.payment_mode_c1.payment_method_id = self.manual_in

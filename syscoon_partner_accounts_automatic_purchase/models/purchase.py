@@ -19,7 +19,7 @@ class PurchaseOrder(models.Model):
                 types['supplier_number'] = True
         if types:
             self.env['res.partner'].create_accounts(partner, types) 
-        return res  
+        return res    
 
     def button_confirm(self):
         config = self.env.company
@@ -32,9 +32,6 @@ class PurchaseOrder(models.Model):
             types['use_separate'] = True
         if config.add_number_to_partner_number:
             types['add_number'] = True        
-        if config.use_separate_partner_numbers:
-            if 'purchase_order_supplier_numbers' in create_accounts: 
-                types['supplier_number'] = True
         if types:
             self.env['res.partner'].create_accounts(partner, types) 
         return super(PurchaseOrder, self).button_confirm()

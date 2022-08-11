@@ -4,10 +4,10 @@
 
 {
     'name': 'syscoon Partner Debit and Credit Accounts',
-    'version': '14.0.0.0.8',
-    'author': 'syscoon GmbH',
+    'version': '15.0.0.0.3',
+    'author': 'syscoon Estonia OÜ',
     'license': 'OPL-1',
-    'category': 'ccounting',
+    'category': 'Accounting',
     'website': 'https://syscoon.com',
     'depends': [
         'base',

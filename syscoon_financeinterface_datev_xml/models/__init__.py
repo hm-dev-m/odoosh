@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import account_payment_term
 from . import syscoon_financeinterface
 from . import syscoon_financeinterface_xml
 from . import res_company

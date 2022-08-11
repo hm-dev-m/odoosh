@@ -34,7 +34,7 @@ class ImportDatev(models.Model):
     one_move = fields.Boolean('In one move?')
     start_date = fields.Date('Start Date', required=True, default=fields.Date.today())
     end_date = fields.Date('End Date', required=True, default=fields.Date.today())
-    log_line = fields.One2many('syscoon.datev.import.log', 'parent_id', 'Log', ondelete='cascade')
+    log_line = fields.One2many('syscoon.datev.import.log', 'parent_id', 'Log')
     account_move_ids = fields.One2many('account.move', 'syscoon_datev_import_id', 'Account Moves')
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -53,12 +53,12 @@ class ImportDatev(models.Model):
             'state': 'info',
         })
         moves = False
+        log_error = False
         file = self.get_attachment()
         if self.get_import_config()['remove_datev_header']:
             file = self.remove_datev_header(file)
         import_list = self.convert_lines(file)
         logs = self.check_can_created(import_list)
-        log_error = False
         if logs:
             for log in logs:
                 if log['state'] == 'error':
@@ -415,7 +415,6 @@ class ImportDatev(models.Model):
                 'line_ids': [(0, 0 , [])],
                 'move_type': 'entry',
                 'syscoon_datev_import_id': self.id,
-                'syscoon_datev_import_guid': False,
             }
 
             debit_move_line = {
@@ -460,7 +459,7 @@ class ImportDatev(models.Model):
             has_currency = False
             discount = False
             taxes = False
-            tax_id = debit_tax_ids = credit_tax_ids = False
+            tax_id = False
             tax_direction = False
             opposite_move = False
             account_types = self.get_account_types()
@@ -477,7 +476,7 @@ class ImportDatev(models.Model):
                     move['ref'] = v['import_value']
                 if v['type'].type == 'discount_amount':
                     discount = v['import_value']
-                if v['type'].type == 'guid' and v['import_value']:
+                if v['type'].type == 'guid':
                     move['syscoon_datev_import_guid'] = v['import_value']
 
             for k, v in dict.items():
@@ -500,10 +499,11 @@ class ImportDatev(models.Model):
 
             for k, v in dict.items():
                 if v['type'].type == 'account':
+                    tax_direction = 'debit_move_line'
                     debit_move_line['account_id'] = self.get_object(v['type'].object, v['type'].field, v['import_value'], v['padding'])
                     if debit_move_line['account_id'].datev_automatic_tax:
-                        debit_tax_ids = debit_move_line['account_id'].datev_automatic_tax
-                        for tax in debit_tax_ids:
+                        tax_ids = debit_move_line['account_id'].datev_automatic_tax
+                        for tax in tax_ids:
                             if tax.price_include:
                                 tax_id = tax
                     if not debit_move_line['account_id']:
@@ -515,13 +515,12 @@ class ImportDatev(models.Model):
                         if partner_credit_id:
                             debit_move_line['account_id'] = partner_credit_id.property_account_payable_id
                             debit_move_line['partner_id'] = partner_credit_id.id
-                    if debit_tax_ids and not tax_direction:
-                        tax_direction = 'debit_move_line'
                 if v['type'].type == 'counteraccount':
                     credit_move_line['account_id'] = self.get_object(v['type'].object, v['type'].field, v['import_value'], v['padding'])
                     if credit_move_line['account_id'].datev_automatic_tax:
-                        credit_tax_ids = credit_move_line['account_id'].datev_automatic_tax
-                        for tax in credit_tax_ids:
+                        tax_direction = 'credit_move_line'
+                        tax_ids = credit_move_line['account_id'].datev_automatic_tax
+                        for tax in tax_ids:
                             if tax.price_include:
                                 tax_id = tax
                     if not credit_move_line['account_id']:
@@ -533,7 +532,7 @@ class ImportDatev(models.Model):
                         if partner_credit_id:
                             credit_move_line['account_id'] = partner_credit_id.property_account_payable_id
                             credit_move_line['partner_id'] = partner_credit_id.id
-                    if credit_tax_ids and not tax_direction:
+                    if tax_id and not tax_direction:
                         tax_direction = 'credit_move_line'
 
             for k, v in dict.items():
@@ -620,8 +619,8 @@ class ImportDatev(models.Model):
                 move['line_ids'].append((0, 0, discount_move_line))
 
             if taxes:
+                tax_move_line = {}
                 for tax in taxes['taxes']:
-                    tax_move_line = {}
                     if tax['account_id']:
                         tax_move_line['account_id'] = tax['account_id']
                         tax_move_line['name'] = tax['name']

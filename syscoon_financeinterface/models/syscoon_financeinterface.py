@@ -35,7 +35,7 @@ class syscoonFinanceinterface(models.Model):
             if isinstance(val, float) and key != 'Kurs':
                 line[key] = str(float_utils.float_repr(val, 2)).replace('.', ',')
             if isinstance(val, float) and key == 'Kurs':
-                line[key] = str(float_utils.float_repr(val, 6)).replace('.', ',')
+                line[key] = str(float_utils.float_repr(val, 4)).replace('.', ',')
         return line
 
     def currency_round(self, value, currency=False):

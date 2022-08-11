@@ -4,9 +4,9 @@
 
 {
     'name': 'syscoon Finanzinterface - Datev ASCII Import',
-    'version': '14.0.0.0.23',
+    'version': '15.0.0.0.15',
     'license': 'OPL-1',
-    'author': 'syscoon GmbH',
+    'author': 'syscoon Estonia OÜ',
     'website': 'https://syscoon.com',
     'description': """The module allows you to import accounting entries.
 

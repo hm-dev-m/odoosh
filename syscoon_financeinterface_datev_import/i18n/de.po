@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0+e\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-23 18:57+0000\n"
-"PO-Revision-Date: 2021-11-23 18:57+0000\n"
+"POT-Creation-Date: 2021-10-12 12:40+0000\n"
+"PO-Revision-Date: 2021-10-12 12:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "%s stimmt nicht mit %s überein. Bitte prüfen."
 #: code:addons/syscoon_financeinterface_datev_import/models/import_datev.py:0
 #, python-format
 msgid "%s with GUID %s already exist and can not be imported"
-msgstr "%s mit GUID %s existiert bereits und kann nicht importiert werden"
+msgstr "%s mit der GUID %s existiert bereits und kann nicht importiert werden"
 
 #. module: syscoon_financeinterface_datev_import
 #: model:ir.model.fields.selection,name:syscoon_financeinterface_datev_import.selection__syscoon_datev_import_assignment__account_move_line_field__account_id
@@ -245,7 +245,7 @@ msgstr "DATEV Import Konfigurationszeile"
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_account_move__syscoon_datev_import_guid
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_account_payment__syscoon_datev_import_guid
 msgid "DATEV Move GUID"
-msgstr "DATEV Buchungs-GUID"
+msgstr "DATEV Buchungs GUID"
 
 #. module: syscoon_financeinterface_datev_import
 #: model:ir.model.fields.selection,name:syscoon_financeinterface_datev_import.selection__syscoon_datev_import_assignment__account_move_field__date
@@ -322,8 +322,6 @@ msgid "Discount Amount"
 msgstr "Skontobetrag"
 
 #. module: syscoon_financeinterface_datev_import
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_account_move__display_name
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_account_tax__display_name
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import__display_name
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import_assignment__display_name
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import_config__display_name
@@ -391,11 +389,6 @@ msgid "Followers"
 msgstr "Abonnenten"
 
 #. module: syscoon_financeinterface_datev_import
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Followers (Kanäle)"
-
-#. module: syscoon_financeinterface_datev_import
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Abonnenten (Partner)"
@@ -411,13 +404,16 @@ msgid "GUID"
 msgstr ""
 
 #. module: syscoon_financeinterface_datev_import
+#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import__has_message
+msgid "Has Message"
+msgstr "Hat eine Nachricht"
+
+#. module: syscoon_financeinterface_datev_import
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import_config__headerrow
 msgid "Headerrow"
 msgstr "Kopfzeile"
 
 #. module: syscoon_financeinterface_datev_import
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_account_move__id
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_account_tax__id
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import__id
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import_assignment__id
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import_config__id
@@ -544,8 +540,6 @@ msgid "Label"
 msgstr "Buchungstext"
 
 #. module: syscoon_financeinterface_datev_import
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_account_move____last_update
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_account_tax____last_update
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import____last_update
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import_assignment____last_update
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import_config____last_update
@@ -638,13 +632,13 @@ msgstr "Buchung %s importiert"
 #: code:addons/syscoon_financeinterface_datev_import/models/import_datev.py:0
 #, python-format
 msgid "Move %s not importedref"
-msgstr "Buchung %s wurde nicht importiert"
+msgstr "Buchung %s nicht importiert"
 
 #. module: syscoon_financeinterface_datev_import
 #: code:addons/syscoon_financeinterface_datev_import/models/import_datev.py:0
 #, python-format
 msgid "Move %s not reconciled"
-msgstr "Buchung %s wurde nicht ausgeglichen"
+msgstr "Buchung %s nicht ausgeglichen"
 
 #. module: syscoon_financeinterface_datev_import
 #: code:addons/syscoon_financeinterface_datev_import/models/import_datev.py:0
@@ -695,7 +689,7 @@ msgstr "Buchungen bestätigt"
 #. module: syscoon_financeinterface_datev_import
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Meine Aktitivtatsfrist"
 
 #. module: syscoon_financeinterface_datev_import
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import__name
@@ -791,7 +785,7 @@ msgstr "Buchungen bestätigen"
 #. module: syscoon_financeinterface_datev_import
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import_config__quotechar
 msgid "Quotechar"
-msgstr ""
+msgstr "Textrenner"
 
 #. module: syscoon_financeinterface_datev_import
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_import.field_syscoon_datev_import_config__ref

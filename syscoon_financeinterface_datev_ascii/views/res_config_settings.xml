@@ -59,6 +59,23 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" title="Add BEDI Beleglink in ASCII Export.">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">BEDI Beleglink</span>
+                                    <div class="text-muted">
+                                        If activated the BEDI Beleglink ist filled for outgoing and incoming invoices / credit notes.
+                                    </div>
+                                    <div class="mt16">
+                                        <div class="content-group" id="send_default">
+                                            <div class="row">
+                                                <field name="company_datev_use_bedi" class="col-lg-1 ml16"/>
+                                                <label for="company_datev_use_bedi"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" title="Enables fixing of moves when they are imported to DATEV.">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">

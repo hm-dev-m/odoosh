@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 import re
+import uuid
 
 
 class AccountMove(models.Model):
@@ -13,13 +14,16 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     datev_checks_enabled = fields.Boolean('Perform Datev Checks', default=lambda self: self.env.company.datev_checks_enabled)
-    datev_ref = fields.Char('DATEV Ref', compute='_compute_datev_ref', store=True, index=True)
+    datev_ref = fields.Char('DATEV Ref', compute='_compute_datev_ref')
+    datev_bedi = fields.Char('DATEV BEDI')
 
     def action_post(self):
         """Inherits the post method to provide the DATEV checks"""
         for move in self:
             if move.datev_checks_enabled:
                 self.make_datev_checks(move)
+            if self.move_type in ['out_invoice', 'out_refund', 'in_invoice', 'in_refund']:
+                self.write({'datev_bedi': str(uuid.uuid5(uuid.NAMESPACE_OID , self.name))})
         return super(AccountMove, self).action_post()
 
     def write(self, vals):

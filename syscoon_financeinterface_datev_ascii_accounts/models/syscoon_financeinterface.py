@@ -11,10 +11,6 @@ import dateutil.relativedelta
 
 _logger = logging.getLogger(__name__)
 
-EU_VAT = ['BE', 'BG', 'DK', 'DE', 'EE', 'FI', 'FR', 'EL', 'GB', 'IE',
-                'IT', 'HR', 'LV', 'LT', 'LU', 'MT', 'NL', 'AT', 'PL', 'PT',
-                'RO', 'SE', 'SK', 'SI', 'ES', 'CZ', 'HU', 'CY']
-
 
 class syscoonFinanceinterface(models.Model):
     """Inherits the basic class to provide the export for DATEV ASCII Accounts"""
@@ -424,7 +420,9 @@ class syscoonFinanceinterface(models.Model):
         else:
             template['Name (Adressattyp natürl. Person)'] = partner_id.name
             template['Adressattyp'] = 1
-        if partner_id.vat and partner_id.vat[:2] in EU_VAT:
+        if partner_id.vat and partner_id.vat[:2] in ('BE', 'BG', 'DK', 'DE', 'EE',
+                'FI', 'FR', 'GR', 'GB', 'IE', 'IT', 'HR', 'LV', 'LT', 'LU', 'MT',
+                'NL', 'AT', 'PL', 'PT', 'RO', 'SE', 'SK', 'SI', 'ES', 'CZ', 'HU', 'CY'):
             template['EU-Land'] = partner_id.vat[:2]
             template['EU-UStID'] = partner_id.vat[2:]
         if partner_id.title:
@@ -456,12 +454,7 @@ class syscoonFinanceinterface(models.Model):
                 else:
                     template['Kennz. Hauptbankverb. %s' % bank_count] = 0
                 bank_count += 1
-        if number[0] == 'C':
-            template['Kunden-/Lief.-Nr.'] = partner_id.supplier_number or ''
-        elif number[0] == 'D':
-            template['Kunden-/Lief.-Nr.'] = partner_id.customer_number or ''
-        else:
-            template['Kunden-/Lief.-Nr.'] = partner_id.ref or ''
+        template['Kunden-/Lief.-Nr.'] = partner_id.ref or ''
         if account_id and account_id.datev_diverse_account:
             template['Diverse-Konto'] = 1
         else:
@@ -516,13 +509,8 @@ class syscoonFinanceinterface(models.Model):
         template['Name'] = partner_id.name
         template['Ort'] = partner_id.city or ''
         template['Kontonummer'] = number[1:] or ''
-        if number[0] == 'C':
-            template['Kundennummer'] = partner_id.supplier_number or ''
-        elif number[0] == 'D':
-            template['Kundennummer'] = partner_id.customer_number or ''
-        else:
-            template['Kundennummer'] = partner_id.ref or ''
-        if partner_id.vat and partner_id.vat[:2] in EU_VAT:
+        template['Kundennummer'] = partner_id.ref or ''
+        if partner_id.vat:
             template['UStIdNr.'] = partner_id.vat[2:]
         if partner_id.bank_ids:
             template['BankName'] = partner_id.bank_ids[0].bank_id.name
@@ -536,7 +524,7 @@ class syscoonFinanceinterface(models.Model):
         template['E-Mail'] = partner_id.email or ''
         template['Internetadresse'] = partner_id.website or ''
         template['Land (2-stellig)'] = partner_id.country_id.code or ''
-        if partner_id.vat and partner_id.vat[:2] in EU_VAT:
+        if partner_id.vat:
             template['UStEG-Land'] = partner_id.vat[:2] 
         return template, account_id
 

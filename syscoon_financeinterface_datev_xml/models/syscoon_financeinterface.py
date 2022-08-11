@@ -29,7 +29,8 @@ class syscoonFinanceinterface(models.Model):
 
     def export(self, mode=False, date_from=False, date_to=False, args=False):
         """ Method that generates the export by the given parameters """
-        export_id = super(syscoonFinanceinterface, self).export(mode, date_from, date_to, args)
+        export_id = super(syscoonFinanceinterface, self).export(mode, 
+            date_from, date_to, args)
         zipfile = False
         if mode == 'datev_xml':
             invoice_mode = args[0]
@@ -39,15 +40,28 @@ class syscoonFinanceinterface(models.Model):
                 invoice_type.extend(['out_invoice', 'out_refund'])
             if invoice_selection in ['vendors', 'both']:
                 invoice_type.extend(['in_invoice', 'in_refund'])
-            moves = self.env['account.move'].search([
-                ('invoice_date', '>=', date_from), ('invoice_date', '<=', date_to), ('move_type', 'in', invoice_type),
-                ('export_id', '=', False), ('state', '=', 'posted')])
+            if invoice_mode == 'bedi':
+                moves = self.env['account.move'].search([
+                    ('invoice_date', '>=', date_from), 
+                    ('invoice_date', '<=', date_to), 
+                    ('move_type', 'in', invoice_type),
+                    ('state', '=', 'posted')])
+            else:
+                moves = self.env['account.move'].search([
+                    ('invoice_date', '>=', date_from),
+                    ('invoice_date', '<=', date_to),
+                    ('move_type', 'in', invoice_type),
+                    ('export_id', '=', False), ('state', '=', 'posted')])
             if not moves:
                 raise UserError(_('There are no invoices to export in the selected date range!'))
             else:
-                export_invoices, export_path, export_time, move_errors, moves_ok = self.generate_export_invoices(invoice_mode, moves, export_id)
+                export_invoices, export_path, export_time, move_errors \
+                    , moves_ok = self.generate_export_invoices(
+                        invoice_mode, moves, export_id
+                    )
                 if export_invoices and moves_ok:
-                    zipfile = self.make_zip_file(export_path, export_invoices, export_time)
+                    zipfile = self.make_zip_file(export_path, export_invoices \
+                        , export_time)
             if zipfile:
                 self.env['ir.attachment'].create({
                     'name': '%s.zip' % (export_id.name),
@@ -57,8 +71,9 @@ class syscoonFinanceinterface(models.Model):
                     'type': 'binary',
                     'datas': base64.b64encode(zipfile),
                 })
-                moves_ok.write({'export_id': export_id.id})
-                if move_errors:
+                if invoice_mode != 'bedi':
+                    moves_ok.write({'export_id': export_id.id})
+                if move_errors and invoice_mode != 'bedi':
                     move_errors = self.env['account.move'].browse(move_errors)
                     move_errors.write({'export_id': False})
                 if os.path.exists(export_path):
@@ -68,7 +83,8 @@ class syscoonFinanceinterface(models.Model):
             return export_id
 
     def generate_export_invoices(self, invoice_mode, moves, export_id):
-        """ Generates a list of dicts which have all the exportlines to datev """
+        """ Generates a list of dicts which have all the exportlines to 
+            datev """
 
         def clean_move_number(move):
             """
@@ -90,8 +106,6 @@ class syscoonFinanceinterface(models.Model):
             else:
                 move_errors.append(move.id)
         moves_ok = self.env['account.move'].browse(moves_with_xml)
-        if not moves_ok:
-            return False, False, False, False, False
         invoice_pdfs = map(self.get_invoice_pdf, moves_ok)
         move_numbers = moves_ok.mapped(clean_move_number)
         move_ids = moves_ok.ids
@@ -111,7 +125,6 @@ class syscoonFinanceinterface(models.Model):
     def get_invoice_pdf(self, move):
         """ Return the PDF report for a given invoice """
         content = False
-        filetype = False
         report = namedtuple('Report', ['content', 'filetype'])
         datas = self.env['ir.attachment'].search([
             ('res_model', '=', 'account.move'),
@@ -120,7 +133,7 @@ class syscoonFinanceinterface(models.Model):
         ], order='id asc')
         if datas:
             content, filetype = self.merge_pdf(datas, move)
-        if not content:
+        else:
             content, filetype = self.env.ref('account.account_invoices')._render_qweb_pdf([move.id])
         report_maked = report._make((content, filetype))
         return report_maked
@@ -215,21 +228,21 @@ class syscoonFinanceinterface(models.Model):
             return dir_path + '/' + doc.pdf_path, dir_path + '/' + doc.xml_path
 
         written_docs = []
-        #try:
-        for id, name, xml_path, pdf_path in docs:
-            inv = self.env['account.move'].browse(id)
-            xp = xml_path.replace(dir_path + '/', '')
-            pp = pdf_path.replace(dir_path + '/', '')
-            written_docs.append(
-                WrittenDoc._make((inv, name, xp, pp)))
-            _logger.info(_('%s has been exported' % name))
-            _logger.info(xml_path)
-            _logger.info(pdf_path)
-            export_info_xml = self.get_documents_xml(written_docs, timestamp)
-            inv_documents_xml_path = self.write_export_invoice_info(dir_path, export_info_xml, timestamp)
-        return filter(None, chain((inv_documents_xml_path,), *map(get_doc_paths, written_docs)))
-        #except:
-        #    raise UserError(_('Please check if the export path %s is not writalbe, please check!' % dir_path))
+        try:
+            for id, name, xml_path, pdf_path in docs:
+                inv = self.env['account.move'].browse(id)
+                xp = xml_path.replace(dir_path + '/', '')
+                pp = pdf_path.replace(dir_path + '/', '')
+                written_docs.append(
+                    WrittenDoc._make((inv, name, xp, pp)))
+                _logger.info(_('%s has been exported' % name))
+                _logger.info(xml_path)
+                _logger.info(pdf_path)
+                export_info_xml = self.get_documents_xml(written_docs, timestamp)
+                inv_documents_xml_path = self.write_export_invoice_info(dir_path, export_info_xml, timestamp)
+            return filter(None, chain((inv_documents_xml_path,), *map(get_doc_paths, written_docs)))
+        except:
+            return UserError(_('Please check if the export path %s is not writalbe, please check!' % dir_path))
 
     def get_error_msg(self, move_id):
         return _('%s (id=%s) could not be exported: ' % (move_id.name, move_id.id))
@@ -297,8 +310,6 @@ class syscoonFinanceinterface(models.Model):
         concentrate pdfs if the number of the attachemnts is > 1
         otherwise use odoo standard for reading the pdf
         """
-        content = False
-        filetype = False
         base64fname = False
         if len(datas) > 1:
             merger = PyPDF2.PdfFileMerger(strict=False)
@@ -313,11 +324,10 @@ class syscoonFinanceinterface(models.Model):
                 try:
                     merger.append(content, import_bookmarks=False)
                 except:
-                    continue
+                    raise UserError(_('Export stopped! \n Invoice %s can not exported, because the PDF has no EOF-Marker. \n Please repair it and start the export again.' % inv.number))
             merger.write(myio)
             merger.close()
-            if myio.getvalue():
-                content, filetype = myio.getvalue(), 'pdf'
+            content, filetype = myio.getvalue(), 'pdf'
         else:
             attach = datas._file_read(datas.store_fname)
             content, filetype = attach, 'pdf'

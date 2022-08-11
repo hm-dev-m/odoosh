@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {   'name': 'syscoon Financeinterface',
-    'version': '14.0.0.0.16',
+    'version': '15.0.0.0.7',
     'depends': ['account'],
-    'author': 'syscoon GmbH',
+    'author': 'syscoon Estonia OÜ',
     'license': 'OPL-1',
     'website': 'https://syscoon.com',
     'summary': 'Main Modul for export of accounting moves',

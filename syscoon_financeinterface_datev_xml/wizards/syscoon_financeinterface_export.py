@@ -10,11 +10,11 @@ class syscoonFinanceinterfaceExport(models.TransientModel):
 
     mode = fields.Selection(selection_add=[('datev_xml', 'DATEV XML')], 
         ondelete={'datev_xml': lambda recs: recs.write({'mode': 'none'})})
-    xml_mode = fields.Selection([('standard', 'Standard'), ('extended', 'Extended')],
+    xml_mode = fields.Selection([('standard', 'Standard'), ('extended', 'Extended'), ('bedi', 'BEDI Link')],
         string='XML-Export Methode',
         help='Export Methode: Standard: without Accounts, Extended: with Accounts',
     )
-    xml_invoices = fields.Selection([('customers', 'Customer Invoices'), ('vendors', 'Vendor Invoices'), ('both', 'Both'), ('expense', 'Expenses')], string='Invoices')
+    xml_invoices = fields.Selection([('customers', 'Customer Invoices'), ('vendors', 'Vendor Invoices'), ('both', 'Both')], string='Invoices')
 
     @api.onchange('mode')
     def _onchange_mode(self):

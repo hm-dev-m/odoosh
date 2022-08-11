@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0+e\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-28 08:32+0000\n"
-"PO-Revision-Date: 2021-03-28 08:32+0000\n"
+"POT-Creation-Date: 2022-08-02 15:45+0000\n"
+"PO-Revision-Date: 2022-08-02 15:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,6 +51,11 @@ msgid "An error occured while saving %s export in %s"
 msgstr "Ein Fehler ist währnd der Speicherung des Exportes %s in %s geschehen"
 
 #. module: syscoon_financeinterface_datev_xml
+#: model:ir.model.fields.selection,name:syscoon_financeinterface_datev_xml.selection__syscoon_financeinterface_export__xml_mode__bedi
+msgid "BEDI Link"
+msgstr "BEDI Beleg-Link"
+
+#. module: syscoon_financeinterface_datev_xml
 #: model:ir.model.fields.selection,name:syscoon_financeinterface_datev_xml.selection__syscoon_financeinterface_export__xml_invoices__both
 msgid "Both"
 msgstr "Beide"
@@ -74,7 +79,7 @@ msgstr "Unternehmen"
 #. module: syscoon_financeinterface_datev_xml
 #: model:ir.model,name:syscoon_financeinterface_datev_xml.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: syscoon_financeinterface_datev_xml
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface_xml__create_uid
@@ -90,11 +95,6 @@ msgstr "Erstellt am"
 #: model:ir.model.fields.selection,name:syscoon_financeinterface_datev_xml.selection__syscoon_financeinterface_export__xml_invoices__customers
 msgid "Customer Invoices"
 msgstr "Kundenrechnungen"
-
-#. module: syscoon_financeinterface_datev_xml
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_account_payment_term__datev_payment_conditons_id
-msgid "DATEV Payment Term ID"
-msgstr "DATEV Zahlungsbedingungen ID"
 
 #. module: syscoon_financeinterface_datev_xml
 #: model:ir.model.fields.selection,name:syscoon_financeinterface_datev_xml.selection__syscoon_financeinterface__mode__datev_xml
@@ -117,14 +117,9 @@ msgstr "DATEV XML Export Einstellungen"
 #: code:addons/syscoon_financeinterface_datev_xml/models/syscoon_financeinterface_xml.py:0
 #, python-format
 msgid "Description"
-msgstr "Beschreibung"
+msgstr ""
 
 #. module: syscoon_financeinterface_datev_xml
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_account_payment_term__display_name
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_res_company__display_name
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface__display_name
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface_export__display_name
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface_xml__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
@@ -197,15 +192,10 @@ msgid ""
 "Group invoice lines that have the same account, tax, analytic account and "
 "analytic tag."
 msgstr ""
-"Gruppiert Rechnungszeilen welche das selbe Konto, den selben Steuersatz, "
-"die selbe Kostenstelle und den selben Kostenstellen Tag hat."
+"Gruppiert Rechnungszeilen welche das selbe Konto, den selben Steuersatz, die"
+" selbe Kostenstelle und den selben Kostenstellen Tag hat."
 
 #. module: syscoon_financeinterface_datev_xml
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_account_payment_term__id
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_res_company__id
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_res_config_settings__id
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface__id
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface_export__id
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface_xml__id
 msgid "ID"
 msgstr ""
@@ -216,11 +206,6 @@ msgid "Invoices"
 msgstr "Rechnungen"
 
 #. module: syscoon_financeinterface_datev_xml
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_account_payment_term____last_update
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_res_company____last_update
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface____last_update
-#: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface_export____last_update
 #: model:ir.model.fields,field_description:syscoon_financeinterface_datev_xml.field_syscoon_financeinterface_xml____last_update
 msgid "Last Modified on"
 msgstr "Zuletzt geändert am"
@@ -236,15 +221,11 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: syscoon_financeinterface_datev_xml
-#: code:addons/syscoon_financeinterface_datev_xml/models/account_payment_term.py:0
+#: code:addons/syscoon_financeinterface_datev_xml/models/syscoon_financeinterface.py:0
 #, python-format
-msgid "Only a value between 11 and 99 is allowed."
+msgid "Please check if the export path %s is not writalbe, please check!"
 msgstr ""
-
-#. module: syscoon_financeinterface_datev_xml
-#: model:ir.model,name:syscoon_financeinterface_datev_xml.model_account_payment_term
-msgid "Payment Terms"
-msgstr "Zahlungsbedingungen"
+"Bitte prüfen Sie ob der Export-Pfad %s mit Schreibrechten versehen ist!"
 
 #. module: syscoon_financeinterface_datev_xml
 #: model_terms:ir.ui.view,arch_db:syscoon_financeinterface_datev_xml.view_syscoon_financeinterface_configuration_datev_xml

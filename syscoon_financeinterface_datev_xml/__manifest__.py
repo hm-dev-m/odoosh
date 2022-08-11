@@ -3,7 +3,7 @@
 
 {
     'name': 'syscoon Finanzinterface - Datev XML Export',
-    'version': '14.0.0.0.36',
+    'version': '15.0.0.0.13',
     'author': 'syscoon Estonia OÜ',
     'license': 'OPL-1',
     'category': 'Accounting',
@@ -18,7 +18,6 @@
     'data': [
         'security/ir.model.access.csv',
         'views/account_move.xml',
-        'views/account_payment_term.xml',
         'views/res_config_settings.xml',
         'wizards/syscoon_financeinterface_export.xml',
     ],
