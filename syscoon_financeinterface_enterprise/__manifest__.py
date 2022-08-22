@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {   'name': 'syscoon Finanzinterface for Enterprise',
-    'version': '14.0.0.0.1',
+    'version': '15.0.0.0.2',
     'depends': [
         'account_accountant',
         'l10n_de_reports',
         'syscoon_financeinterface',
     ],
-    'author': 'syscoon GmbH',
+    'author': 'syscoon OÜ',
     'license': 'OPL-1',
     'website': 'https://syscoon.com',
     'summary': 'Changes the main menu entry',

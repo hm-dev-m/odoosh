@@ -232,7 +232,7 @@ class syscoonFinanceinterface(models.Model):
         amount_check = amount_real = 0.0
         for line in move.line_ids:
             if self.env.company.datev_export_method == 'gross':
-                if self.env['account.tax.repartition.line'].search([('account_id', '=', line.account_id.id)]).ids:
+                if self.env['account.tax.repartition.line'].search([('account_id', '=', line.account_id.id)]).ids and line.tax_tag_ids:
                     continue
             if line.account_id.id == move.export_account_counterpart.id:
                 amount_real += line.debit - line.credit
@@ -253,9 +253,20 @@ class syscoonFinanceinterface(models.Model):
         return export_lines
 
     def correct_amount(self, export_lines, amount_check, amount_real):
-        difference = amount_check - amount_real
-        new_amount = export_lines[-1]['Umsatz (ohne Soll/Haben-Kz)'] - difference
-        export_lines[-1]['Umsatz (ohne Soll/Haben-Kz)'] = new_amount
+        line_count = 0
+        line_to_correct = 0
+        for line in export_lines:
+            account_id = self.env['account.account'].search([('code', '=', line['Konto'])])
+            counteraccount_id = self.env['account.account'].search([('code', '=', line['Gegenkonto (ohne BU-Schlüssel)'])])
+            if not (account_id.user_type_id.type == 'liquidity' or counteraccount_id.user_type_id.type == 'liquidity'):
+                line_to_correct = line_count
+            line_count += 1
+        if export_lines[line_to_correct]['Soll/Haben-Kennzeichen'] == 'H':
+            difference = amount_real - amount_check
+        else:    
+            difference = amount_check - amount_real
+        new_amount = export_lines[line_to_correct]['Umsatz (ohne Soll/Haben-Kz)'] + difference
+        export_lines[line_to_correct]['Umsatz (ohne Soll/Haben-Kz)'] = new_amount
         return export_lines
 
     def generate_export_line(self, export_line, line):
@@ -304,14 +315,15 @@ class syscoonFinanceinterface(models.Model):
             export_line['Kurs'] = line.company_id.currency_id._convert(1.0, line.currency_id, line.company_id, line.date, round=False)
         export_line['Umsatz (ohne Soll/Haben-Kz)'] = self.currency_round(total, line.currency_id)
         if line.partner_id:
-            if line.account_id.user_type_id.type == 'payable' and line.partner_id.creditor_number:
-                export_line['Konto'] = self.remove_leading_zero(line.partner_id.creditor_number)
-            if line.account_id.user_type_id.type == 'receivable' and line.partner_id.debitor_number:
-                export_line['Konto'] = self.remove_leading_zero(line.partner_id.debitor_number)
-            if line.move_id.export_account_counterpart.user_type_id.type == 'payable' and line.partner_id.creditor_number:
-                export_line['Gegenkonto (ohne BU-Schlüssel)'] = self.remove_leading_zero(line.partner_id.creditor_number)
-            if line.move_id.export_account_counterpart.user_type_id.type == 'receivable' and line.partner_id.debitor_number:
-                export_line['Gegenkonto (ohne BU-Schlüssel)'] = self.remove_leading_zero(line.partner_id.debitor_number)
+            partner = line.partner_id.commercial_partner_id
+            if line.account_id.user_type_id.type == 'payable' and partner.creditor_number:
+                export_line['Konto'] = self.remove_leading_zero(partner.creditor_number)
+            if line.account_id.user_type_id.type == 'receivable' and partner.debitor_number:
+                export_line['Konto'] = self.remove_leading_zero(partner.debitor_number)
+            if line.move_id.export_account_counterpart.user_type_id.type == 'payable' and partner.creditor_number:
+                export_line['Gegenkonto (ohne BU-Schlüssel)'] = self.remove_leading_zero(partner.creditor_number)
+            if line.move_id.export_account_counterpart.user_type_id.type == 'receivable' and partner.debitor_number:
+                export_line['Gegenkonto (ohne BU-Schlüssel)'] = self.remove_leading_zero(partner.debitor_number)
         if not export_line['Konto']:
             export_line['Konto'] = self.remove_leading_zero(line.account_id.code)
         if not export_line['Gegenkonto (ohne BU-Schlüssel)']:
@@ -323,6 +335,8 @@ class syscoonFinanceinterface(models.Model):
         if line.move_id.invoice_payment_term_id.datev_payment_conditons_id:
             export_line['Belegfeld 2'] = line.move_id.invoice_payment_term_id.datev_payment_conditons_id
         export_line['Buchungstext'] = self.create_label(line)
+        if line.company_id.datev_use_bedi:
+            export_line['Beleglink'] = '"BEDI ""%s""' % line.move_id.datev_bedi or ''
         if line.analytic_account_id.code:
             export_line['KOST1 - Kostenstelle'] = line.analytic_account_id.code
         if line.analytic_tag_ids:
@@ -349,7 +363,10 @@ class syscoonFinanceinterface(models.Model):
                     for ml2 in self.env['account.move.line'].browse(ml.move_id.line_ids._reconciled_lines()):
                         if ml2.move_id.move_type in ['out_invoice', 'out_refund', 'in_invoice', 'in_refund'] and ml2.move_id.datev_ref:
                             doc_field = ml2.move_id.datev_ref
-        if self.env['ir.module.module'].sudo().search([('name', '=', 'account_asset')]):
+        if self.env['ir.module.module'].sudo().search([
+            ('name', '=', 'account_asset'),
+            ('state', '=', 'installed')
+        ]):
             if line.move_id.asset_id and line.move_id.asset_id.original_move_line_ids:
                 doc_field = line.move_id.asset_id.original_move_line_ids[0].move_id.datev_ref
         if not doc_field:
@@ -372,7 +389,7 @@ class syscoonFinanceinterface(models.Model):
 
     def get_field(self, model, field_name):
         for part in field_name.split('.'):
-            if part == 'move_id':
+            if part in ['move_id', 'partner_id']:
                 model = getattr(model, part)
             else:
                 value = getattr(model, part)

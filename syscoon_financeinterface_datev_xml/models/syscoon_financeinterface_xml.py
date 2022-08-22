@@ -216,7 +216,6 @@ class syscoonFinanceinterfaceXML(models.TransientModel):
         item['quantity'] = line.quantity or 1.0
         item['price_line_amount'] = {}
         item['price_line_amount']['tax'] = line.tax_ids and line.tax_ids[0].amount or 0.0
-        item['price_line_amount']['tax_amount'] = 0.0
         if invoice_mode == 'extended':
             if move_id.move_type in ['out_refund', 'in_refund']:
                 if move_id.currency_id.round(line.price_total - line.price_subtotal) != 0.0:
@@ -232,7 +231,6 @@ class syscoonFinanceinterfaceXML(models.TransientModel):
             item['accounting_info'] = {}
             item['accounting_info']['account_no'] = line.account_id.code.lstrip('0')
             if line.currency_id and line.currency_id != line.company_id.currency_id and line.amount_currency != 0.0:
-                #item['accounting_info']['exchange_rate'] = "{:.6f}".format(line.currency_id.with_context(date=line.date).rate)
                 item['accounting_info']['exchange_rate'] = "{:.6f}".format(line.company_id.currency_id._convert(1.0, line.currency_id, line.company_id, line.date, round=False))
             item['accounting_info']['booking_text'] = line.name and line.name[:60] or _('Description')
             if not line.account_id.datev_automatic_account:
@@ -270,7 +268,7 @@ class syscoonFinanceinterfaceXML(models.TransientModel):
             res.setdefault(line.tax_line_id.tax_group_id, {'rate': 0.0, 'base': 0.0, 'amount': 0.0, 'currency_amount': 0.0})
             res[line.tax_line_id.tax_group_id]['rate'] = line.tax_line_id.amount
             res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
-            tax_key_add_base = tuple(move_id._get_tax_key_for_group_add_base(line))
+            tax_key_add_base = tuple([line.tax_line_id.id])
             if tax_key_add_base not in done_taxes:
                 # The base should be added ONCE
                 res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount * currency_rate
@@ -335,7 +333,8 @@ class syscoonFinanceinterfaceXML(models.TransientModel):
 
         if invoice_mode == 'extended':
             account_info = etree.SubElement(invoice, 'accounting_info')
-            for key, val in self.get_accounting_info(move_id, invoice_mode).items():
+            for key, val in self.get_accounting_info(move_id,
+                    invoice_mode).items():
                 account_info.attrib[key] = self.make_string(val)
 
         invoice_party = etree.SubElement(invoice, 'invoice_party')
@@ -386,19 +385,23 @@ class syscoonFinanceinterfaceXML(models.TransientModel):
                     total_amount.append(self.get_subelement(key, line))
 
         if move_id.narration:
-            additional_info_footer = etree.SubElement(invoice, 'additional_info_footer')
+            additional_info_footer = etree.SubElement(invoice,
+                'additional_info_footer')
             additional_info_footer.attrib['type'] = 'text'
-            additional_info_footer.attrib['content'] = move_id and move_id.narration[:60] or ''
+            additional_info_footer.attrib['content'] = move_id and \
+                move_id.narration[:60] or ''
 
         return invoice
 
     def create_documents_xml(self, docs, timestamp):
         xml = self.make_documents_xml(docs, timestamp)
-        documents = etree.tostring(xml, pretty_print = True, xml_declaration = True, encoding = 'UTF-8')
+        documents = etree.tostring(xml, pretty_print = True, 
+            xml_declaration = True, encoding = 'UTF-8')
         return documents
 
     def make_documents_xml(self, docs, timestamp):
-        attr_qname = etree.QName('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')
+        attr_qname = etree.QName('http://www.w3.org/2001/XMLSchema-instance', 
+            'schemaLocation')
         qname = etree.QName('http://www.w3.org/2001/XMLSchema-instance', 'type')
         nsmap = {'xsi': 'http://www.w3.org/2001/XMLSchema-instance',
                  None: 'http://xml.datev.de/bedi/tps/document/v05.0'}
@@ -416,6 +419,8 @@ class syscoonFinanceinterfaceXML(models.TransientModel):
         content = etree.SubElement(archive, 'content')
         for doc in docs:
             document = etree.SubElement(content, 'document')
+            if doc.inv.company_id.datev_use_bedi and doc.inv.datev_bedi:
+                document.attrib['guid'] = doc.inv.datev_bedi
             extension = etree.Element('extension', {qname: 'Invoice'})
             extension.attrib['datafile'] = doc.xml_path
             property = etree.SubElement(extension, 'property')

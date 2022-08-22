@@ -203,7 +203,6 @@
             <field name="default"></field>
         </record>
 
-
         <!-- Import Config Rows -->
         <record id="umsatz" model="syscoon.datev.import.config.rows">
             <field name="name">Umsatz (ohne Soll/Haben-Kz)</field>
@@ -262,10 +261,6 @@
         <record id="kost2" model="syscoon.datev.import.config.rows">
             <field name="name">KOST2 - Kostenstelle</field>
             <field name="assignment_type" ref="assignment_analytic_tags"/>
-        </record>
-        <record id="guid" model="syscoon.datev.import.config.rows">
-            <field name="name">Buchungs GUID</field>
-            <field name="assignment_type" ref="assignment_move_guid"/>
         </record>
 
     </data>

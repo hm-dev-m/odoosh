@@ -21,3 +21,4 @@ class ResCompany(models.Model):
     datev_remove_leading_zeros = fields.Boolean('Remove Leading Zeros', help='Removes leading zeros on account-codes. E.g. 0670 becomes 670 in the export.')
     datev_group_lines = fields.Boolean('Group Lines', help='Group move lines with the same accounts, taxes, tax key and analytic accounts')
     datev_auto_set_accounts = fields.Selection(selection=[], string='Set Accounts and Taxes')
+    datev_use_bedi = fields.Boolean('Use BEDI Beleglink')

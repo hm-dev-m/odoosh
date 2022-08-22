@@ -9,4 +9,3 @@ class AccountPaymentTerm(models.Model):
     _inherit = 'account.payment.term'
 
     datev_payment_conditons_id = fields.Integer('DATEV Payment Term ID')
-

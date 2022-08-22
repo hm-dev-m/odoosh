@@ -4,7 +4,7 @@
 
 {
     'name': 'syscoon Partner Debit and Credit Accounts Automation',
-    'version': '14.0.0.0.3',
+    'version': '15.0.0.0.1',
     'author': 'syscoon GmbH',
     'license': 'OPL-1',
     'category': 'Accounting',

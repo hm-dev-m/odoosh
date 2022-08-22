@@ -3,7 +3,7 @@
 
 {
     'name': 'syscoon Finanzinterface - DATEV ASCII Export',
-    'version': '14.0.0.0.35',
+    'version': '15.0.0.0.18',
     'author': 'syscoon Estonia OÜ',
     'license': 'OPL-1',
     'website': 'https://syscoon.com',

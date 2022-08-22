@@ -5,13 +5,14 @@
 from odoo import _, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Date
-from odoo.tests.common import Form, SavepointCase
+from odoo.tests.common import Form, TransactionCase
 
 
-class TestAccountPaymentPartner(SavepointCase):
+class TestAccountPaymentPartner(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         cls.res_users_model = cls.env["res.users"]
         cls.move_model = cls.env["account.move"]
@@ -33,6 +34,7 @@ class TestAccountPaymentPartner(SavepointCase):
             raise ValidationError(_("No Chart of Account Template has been defined !"))
         old_company = cls.env.user.company_id
         cls.env.user.company_id = cls.company_2.id
+        cls.env.ref("base.user_admin").company_ids = [(4, cls.company_2.id)]
         cls.chart.try_loading()
         cls.env.user.company_id = old_company.id
 
@@ -105,7 +107,7 @@ class TestAccountPaymentPartner(SavepointCase):
         cls.customer_payment_mode = cls.payment_mode_model.create(
             {
                 "name": "Customers to Bank 1",
-                "bank_account_link": "fixed",
+                "bank_account_link": "variable",
                 "payment_method_id": cls.manual_in.id,
                 "company_id": cls.company.id,
                 "fixed_journal_id": cls.journal_c1.id,
@@ -282,7 +284,7 @@ class TestAccountPaymentPartner(SavepointCase):
         self.assertFalse(invoice.partner_bank_id)
 
         invoice.partner_id = False
-        self.assertEqual(invoice.payment_mode_id, self.payment_mode_model)
+        self.assertEqual(invoice.payment_mode_id, self.supplier_payment_mode_c2)
         self.assertEqual(invoice.partner_bank_id, self.partner_bank_model)
 
     def test_invoice_create_in_invoice(self):
@@ -399,13 +401,19 @@ class TestAccountPaymentPartner(SavepointCase):
         refund_invoice_wizard = (
             self.env["account.move.reversal"]
             .with_context(
-                {
+                **{
                     "active_ids": [invoice.id],
                     "active_id": invoice.id,
                     "active_model": "account.move",
                 }
             )
-            .create({"refund_method": "refund", "reason": "reason test create"})
+            .create(
+                {
+                    "refund_method": "refund",
+                    "reason": "reason test create",
+                    "journal_id": invoice.journal_id.id,
+                }
+            )
         )
         refund_invoice = self.move_model.browse(
             refund_invoice_wizard.reverse_moves()["res_id"]
@@ -427,13 +435,19 @@ class TestAccountPaymentPartner(SavepointCase):
         refund_invoice_wizard = (
             self.env["account.move.reversal"]
             .with_context(
-                {
+                **{
                     "active_ids": [invoice.id],
                     "active_id": invoice.id,
                     "active_model": "account.move",
                 }
             )
-            .create({"refund_method": "refund", "reason": "reason test create"})
+            .create(
+                {
+                    "refund_method": "refund",
+                    "reason": "reason test create",
+                    "journal_id": invoice.journal_id.id,
+                }
+            )
         )
         refund_invoice = self.move_model.browse(
             refund_invoice_wizard.reverse_moves()["res_id"]
@@ -550,3 +564,19 @@ class TestAccountPaymentPartner(SavepointCase):
         self.assertEqual(
             out_invoice.partner_bank_filter_type_domain, out_invoice.bank_partner_id
         )
+
+    def test_account_move_payment_mode_id_default(self):
+        payment_mode = self.env.ref("account_payment_mode.payment_mode_inbound_dd1")
+        field = self.env["ir.model.fields"].search(
+            [
+                ("model_id.model", "=", self.move_model._name),
+                ("name", "=", "payment_mode_id"),
+            ]
+        )
+        move_form = Form(self.move_model.with_context(default_type="out_invoice"))
+        self.assertFalse(move_form.payment_mode_id)
+        self.env["ir.default"].create(
+            {"field_id": field.id, "json_value": payment_mode.id}
+        )
+        move_form = Form(self.move_model.with_context(default_type="out_invoice"))
+        self.assertEqual(move_form.payment_mode_id, payment_mode)

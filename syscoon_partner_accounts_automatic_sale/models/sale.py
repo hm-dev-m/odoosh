@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
             types['add_number'] = True
         if config.use_separate_partner_numbers:
             if 'sale_order_customer_numbers' in create_accounts: 
-                types['customer_number'] = True     
+                types['customer_number'] = True      
         if types:
             self.env['res.partner'].create_accounts(partner, types) 
         return super(SaleOrder, self).action_confirm()

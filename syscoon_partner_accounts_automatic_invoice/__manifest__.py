@@ -4,8 +4,8 @@
 
 {
     'name': 'syscoon Partner Debit and Credit Accounts Automation on Invoices',
-    'version': '14.0.0.0.2',
-    'author': 'syscoon GmbH',
+    'version': '15.0.0.0.2',
+    'author': 'syscoon Estonia OÜ',
     'license': 'OPL-1',
     'category': 'Accounting',
     'website': 'https://syscoon.com',

@@ -11,7 +11,7 @@ class AccountMove(models.Model):
     export_id = fields.Many2one('syscoon.financeinterface', 'Export', copy=False)
     export_manual = fields.Boolean('Set Account Counterpart')
     export_account_counterpart = fields.Many2one('account.account', compute='_get_export_datev_account',
-        help='Technical field needed for move exports', store=True)
+        help='Technical field needed for move exports')
 
     @api.depends('journal_id', 'line_ids', 'journal_id.default_account_id')
     def _get_export_datev_account(self):
@@ -19,6 +19,7 @@ class AccountMove(models.Model):
         Set the account counterpart for the move autmaticaly
         """
         for move in self:
+            move.export_account_counterpart = False
             value = False
             # If move has an invoice, return invoice's account_id
             if move.is_invoice(include_receipts=True):
@@ -29,16 +30,8 @@ class AccountMove(models.Model):
                 continue
             # If move belongs to a bank journal, return the journal's account (debit/credit should normally be the same)
             if move.journal_id.type == 'bank' and move.journal_id.default_account_id:
-                if move.payment_id:
-                    if move.payment_id.payment_type == 'outbound':
-                        move.export_account_counterpart = move.journal_id.payment_credit_account_id
-                        continue
-                    elif move.payment_id.payment_type == 'inbound':
-                        move.export_account_counterpart = move.journal_id.payment_debit_account_id
-                        continue
-                    else:
-                        move.export_account_counterpart = move.journal_id.default_account_id
-                        continue
+                move.export_account_counterpart = move.journal_id.default_account_id
+                continue
             # If the move is an automatic exchange rate entry, take the gain/loss account set on the exchange journal
             elif move.journal_id.type == 'general' and move.journal_id == self.env.company.currency_exchange_journal_id:
                 accounts = [

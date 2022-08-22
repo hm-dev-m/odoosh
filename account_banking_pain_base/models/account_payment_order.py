@@ -32,7 +32,6 @@ class AccountPaymentOrder(models.Model):
             ("CRED", "Borne by Creditor"),
             ("DEBT", "Borne by Debtor"),
         ],
-        string="Charge Bearer",
         default="SLEV",
         readonly=True,
         states={"draft": [("readonly", False)], "open": [("readonly", False)]},
@@ -48,7 +47,6 @@ class AccountPaymentOrder(models.Model):
         "debtor.",
     )
     batch_booking = fields.Boolean(
-        string="Batch Booking",
         readonly=True,
         states={"draft": [("readonly", False)], "open": [("readonly", False)]},
         tracking=True,
@@ -58,22 +56,81 @@ class AccountPaymentOrder(models.Model):
         "transfer of the SEPA XML file.",
     )
 
+    @api.model
+    def _sepa_iban_prefix_list(self):
+        # List of IBAN prefixes (not country codes !)
+        # Source: https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2020-10/EPC409-09%20EPC%20List%20of%20SEPA%20Scheme%20Countries%20v3.0_1.pdf  # noqa: B950
+        # Some countries use IBAN but are not part of the SEPA zone
+        # example: Turkey, Madagascar, Tunisia, etc.
+        return [
+            "BE",
+            "BG",
+            "ES",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "DE",
+            "GI",
+            "GR",
+            "GB",
+            "HU",
+            "IS",
+            "IE",
+            "IT",
+            "LV",
+            "LI",
+            "LT",
+            "LU",
+            "PT",
+            "MT",
+            "MC",
+            "NL",
+            "NO",
+            "PL",
+            "RO",
+            "SM",
+            "SK",
+            "SI",
+            "SE",
+            "CH",
+            "VA",
+        ]
+
     @api.depends(
         "company_partner_bank_id.acc_type",
+        "company_partner_bank_id.sanitized_acc_number",
         "payment_line_ids.currency_id",
         "payment_line_ids.partner_bank_id.acc_type",
+        "payment_line_ids.partner_bank_id.sanitized_acc_number",
     )
     def _compute_sepa(self):
         eur = self.env.ref("base.EUR")
+        sepa_list = self._sepa_iban_prefix_list()
         for order in self:
             sepa = True
             if order.company_partner_bank_id.acc_type != "iban":
+                sepa = False
+            if (
+                order.company_partner_bank_id
+                and order.company_partner_bank_id.sanitized_acc_number[:2]
+                not in sepa_list
+            ):
                 sepa = False
             for pline in order.payment_line_ids:
                 if pline.currency_id != eur:
                     sepa = False
                     break
                 if pline.partner_bank_id.acc_type != "iban":
+                    sepa = False
+                    break
+                if (
+                    pline.partner_bank_id
+                    and pline.partner_bank_id.sanitized_acc_number[:2] not in sepa_list
+                ):
                     sepa = False
                     break
             sepa = order.compute_sepa_final_hook(sepa)
@@ -143,15 +200,16 @@ class AccountPaymentOrder(models.Model):
                 "\n".join(
                     [error_msg_prefix] + error_msg_details_list + [error_msg_data]
                 )
-            )
+            ) from None
 
         if not isinstance(value, str):
             raise UserError(
                 _(
-                    "The type of the field '%s' is %s. It should be a string "
-                    "or unicode."
+                    "The type of the field '%(field)s' is %(value)s. It should be a string "
+                    "or unicode.",
+                    field=field_name,
+                    value=type(value),
                 )
-                % (field_name, type(value))
             )
         if not value:
             raise UserError(
@@ -201,7 +259,7 @@ class AccountPaymentOrder(models.Model):
                     "of the problem : %s"
                 )
                 % str(e)
-            )
+            ) from None
         return True
 
     def finalize_sepa_file_creation(self, xml_root, gen_args):

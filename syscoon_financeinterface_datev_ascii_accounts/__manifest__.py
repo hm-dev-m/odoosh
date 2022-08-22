@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {   'name': 'syscoon Finanzinterface - Datev ASCII Account Export',
-    'version': '14.0.0.0.13',
+    'version': '15.0.0.0.5',
     'depends': [
         'syscoon_financeinterface_datev_ascii',
         'syscoon_partner_accounts',
     ],
-    'author': 'syscoon GmbH',
+    'author': 'syscoon Estonia OÜ',
     'license': 'OPL-1',
     'website': 'https://syscoon.com',
     'summary': 'Module for exporting DATEV ASCII accounts',

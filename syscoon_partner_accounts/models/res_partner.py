@@ -96,7 +96,7 @@ class ResPartner(models.Model):
         if not debitor_number and 'receivable' in types.keys():
             debitor_number = config.receivable_sequence_id.next_by_id()
             if 'use_separate' in types.keys():
-                receivable_field_ids = self.env['ir.model.fields'].search([
+                receivable_field_ids = self.env['ir.model.fields'].sudo().search([
                     ('model', '=', 'res.partner'), 
                     ('name', '=', 'property_account_receivable_id')
                 ])
@@ -119,7 +119,7 @@ class ResPartner(models.Model):
         if not creditor_number and 'payable' in types.keys():
             creditor_number = config.payable_sequence_id.next_by_id()
             if 'use_separate' in types.keys():
-                payable_field_ids = self.env['ir.model.fields'].search([
+                payable_field_ids = self.env['ir.model.fields'].sudo().search([
                     ('model', '=', 'res.partner'),
                     ('name', '=', 'property_account_payable_id')
                 ])
