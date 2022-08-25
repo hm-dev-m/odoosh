@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    
+    <record id="pos_card_payments" model="account.account">
+        <field name="code">1014_sumup</field>
+        <field name="name">POS Card Payments (test)</field>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="reconcile">True</field>
+    </record>
+    
+    <record id="impersonal_client_for_sumup" model="res.partner">
+        <field name="name">Impersonal client for SumUp transactions (DON'T REMOVE!)</field>
+        <field name="company_type">person</field>
+        <field name="property_account_receivable_id" ref="pos_card_payments"/>
+        <field name="comment">DON'T REMOVE THIS RECORD!</field>
+    </record>
+    
+    <record id="sumup_lite_demo_payment_method" model="pos.payment.method">
+        <field name="name">SumUp app + reader</field>
+        <field name="receivable_account_id" ref="pos_card_payments"/>
+        <field name="split_transactions">True</field>
+        <field name="use_sumup_mob_app_and_card_reader">True</field>
+        <field name="sumup_default_customer_for_impersonal_orders" ref="impersonal_client_for_sumup"/>
+    </record>
+    
+    <record id="point_of_sale.pos_config_main" model="pos.config">
+        <field name="payment_method_ids" eval="[(4, ref('sumup_lite_demo_payment_method'))]"/>
+        <field name="sumup_affiliate_key">XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</field>
+    </record>
+    
+</data>
+</odoo>
