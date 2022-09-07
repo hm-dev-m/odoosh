@@ -23,7 +23,7 @@ class AccountMove(models.Model):
             if move.datev_checks_enabled:
                 self.make_datev_checks(move)
             if self.move_type in ['out_invoice', 'out_refund', 'in_invoice', 'in_refund']:
-                self.write({'datev_bedi': str(uuid.uuid5(uuid.NAMESPACE_OID , str(self.name)))})
+                self.write({'datev_bedi': str(uuid.uuid5(uuid.NAMESPACE_OID , self.name))})
         return super(AccountMove, self).action_post()
 
     def write(self, vals):

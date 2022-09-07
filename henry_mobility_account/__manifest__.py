@@ -1,6 +1,6 @@
 {
     'name': 'Henry Mobility Accounting',
-    'version': '15.0.1.1.0',
+    'version': '15.0.1.2.0',
     'author': 'Hucke Media GmbH & Co. KG/IFE GmbH',
     'category': 'Customizations/Custom',
     'website': 'https://www.hucke-media.de/',
